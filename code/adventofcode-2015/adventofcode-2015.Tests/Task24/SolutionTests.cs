@@ -24,7 +24,7 @@ namespace adventofcode_2015.Tests.Task24
             while (skip < lines.Length)
             {
                 var namedLines = lines.Skip(skip).Take(size).ToList();
-                foreach(var line in namedLines)
+                foreach (var line in namedLines)
                 {
                     var words = line.TrimEnd('.').Split(" ");
                     var name = words[0];

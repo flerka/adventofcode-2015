@@ -1,10 +1,7 @@
 ﻿using adventofcode_2015.Task3;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace adventofcode_2015.Tests.Task3

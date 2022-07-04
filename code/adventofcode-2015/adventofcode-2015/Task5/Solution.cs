@@ -12,7 +12,7 @@ namespace adventofcode_2015.Task5
             (int x, int y) currentPos = (0, 0);
             Dictionary<(int x, int y), int> houses = new();
 
-            foreach(var item in input)
+            foreach (var item in input)
             {
                 currentPos = item switch
                 {
@@ -22,7 +22,7 @@ namespace adventofcode_2015.Task5
                     'v' => (currentPos.x, currentPos.y - 1)
                 };
 
-                houses[currentPos] = houses.ContainsKey(currentPos) ? 
+                houses[currentPos] = houses.ContainsKey(currentPos) ?
                     (houses[currentPos] + 1) : 1;
             }
 

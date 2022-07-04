@@ -1,5 +1,4 @@
 ﻿using adventofcode_2015.Task12;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,7 +43,7 @@ namespace adventofcode_2015.Tests.Task12
                 var endUnparsed = data[1].Split(',').Select(int.Parse).ToList();
 
                 return new InputCmd(
-                    command, 
+                    command,
                     (startUnparsed[0], startUnparsed[1]),
                     (endUnparsed[0], endUnparsed[1]));
             }).ToList();

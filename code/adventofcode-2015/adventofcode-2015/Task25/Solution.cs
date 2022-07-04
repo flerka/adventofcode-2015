@@ -21,7 +21,7 @@ namespace adventofcode_2015.Task25
             var stateData = input.ToDictionary(i => i.Name, k => new HorseState());
             for (var i = 0; i <= seconds; i++)
             {
-                foreach(var horseName in stateData.Keys)
+                foreach (var horseName in stateData.Keys)
                 {
                     var state = stateData[horseName];
                     var stats = statsData[horseName];

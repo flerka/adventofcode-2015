@@ -1,5 +1,4 @@
 ﻿using adventofcode_2015.Task14;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,7 +32,7 @@ namespace adventofcode_2015.Tests.Task14
                     }
                     return new AndCommand(temp[0], temp[1], output);
                 }
-               
+
                 if (item.Contains($" {OperationType.OR} "))
                 {
                     var temp = data[0].Split($" {OperationType.OR} ").ToList();
@@ -49,7 +48,7 @@ namespace adventofcode_2015.Tests.Task14
                 if (item.Contains($" {OperationType.RSHIFT} "))
                 {
                     var temp = data[0].Split($" {OperationType.RSHIFT} ").ToList();
-                    return new RShiftComamnd(temp[0],int.Parse(temp[1]), output);
+                    return new RShiftComamnd(temp[0], int.Parse(temp[1]), output);
                 }
 
                 if (item.Contains($"{OperationType.NOT}"))
@@ -57,7 +56,7 @@ namespace adventofcode_2015.Tests.Task14
                     return new NotCommand(data[0].Split($"{OperationType.NOT} ")[1], output);
                 }
 
-                if(int.TryParse(data[0], out n))
+                if (int.TryParse(data[0], out n))
                 {
                     return new InputCommand(int.Parse(data[0]), output);
                 }

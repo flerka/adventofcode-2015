@@ -13,7 +13,7 @@ namespace adventofcode_2015.Task30
         {
             return data.Keys.FirstOrDefault(key => data[key].Keys.All(subkey =>
             {
-                return subkey switch 
+                return subkey switch
                 {
                     "cats" or "trees" => data[key][subkey] > userData[subkey],
                     "pomeranians" or "goldfish" => data[key][subkey] < userData[subkey],

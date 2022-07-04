@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace adventofcode_2015.Task24
 {
@@ -27,7 +26,7 @@ namespace adventofcode_2015.Task24
                 res += pairs[(mutationsList[0], mutationsList[mutationsList.Count - 1])];
                 res += pairs[(mutationsList[0], mutationsList[1])];
 
-                res += pairs[(mutationsList[mutationsList.Count-1], mutationsList[mutationsList.Count - 2])];
+                res += pairs[(mutationsList[mutationsList.Count - 1], mutationsList[mutationsList.Count - 2])];
                 res += pairs[(mutationsList[mutationsList.Count - 1], mutationsList[0])];
                 return res;
             }).Max();

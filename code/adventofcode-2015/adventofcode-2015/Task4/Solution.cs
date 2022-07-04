@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace adventofcode_2015.Task4
 {
@@ -15,11 +12,11 @@ namespace adventofcode_2015.Task4
         {
             var result = 0;
 
-            foreach(var item in input)
+            foreach (var item in input)
             {
                 var sorted = new List<int> { item.l, item.w, item.h }
                 .OrderBy(x => x).Take(2).ToList();
-                result += 2* sorted[0] + 2 * sorted[1] + item.l * item.w * item.h;
+                result += 2 * sorted[0] + 2 * sorted[1] + item.l * item.w * item.h;
             }
 
             return result;

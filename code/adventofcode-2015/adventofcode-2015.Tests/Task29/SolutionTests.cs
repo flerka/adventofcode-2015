@@ -11,7 +11,7 @@ namespace adventofcode_2015.Tests.Task29
         public void Task29_RealExample_Correct()
         {
             var data = ReadFile(Path.Combine("Task29", "Data.txt"));
-            var userData = new Dictionary<string, int> 
+            var userData = new Dictionary<string, int>
             {
                 { "children", 3 },
                 {"cats", 7 },

@@ -17,7 +17,7 @@ namespace adventofcode_2015.Task20
             {
                 password = Inc(password, password.Length - 1);
             }
-            
+
             return password;
         }
 

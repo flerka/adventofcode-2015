@@ -14,7 +14,7 @@ namespace adventofcode_2015.Task6
 
             Dictionary<(int x, int y), int> houses = new() { { (0, 0), 2 } };
 
-            for(var i = 0; i < input.Length; i++)
+            for (var i = 0; i < input.Length; i++)
             {
                 var item = input[i];
                 var currentPos = i % 2 == 0 ? santaPos : robosantaPos;
@@ -27,7 +27,7 @@ namespace adventofcode_2015.Task6
                     'v' => (currentPos.x, currentPos.y - 1)
                 };
 
-                houses[currentPos] = houses.ContainsKey(currentPos) ? 
+                houses[currentPos] = houses.ContainsKey(currentPos) ?
                     (houses[currentPos] + 1) : 1;
 
                 if (i % 2 == 0)

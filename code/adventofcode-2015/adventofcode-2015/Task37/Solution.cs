@@ -8,14 +8,14 @@
         public static int Function(long presentsNumber)
         {
             var n = presentsNumber / 10;
-            for(var j = 1; j < n; j++)
+            for (var j = 1; j < n; j++)
             {
                 var sum = 0;
 
                 for (var i = 1; i <= j; i++)
                 {
                     if (j % i == 0)
-                    { 
+                    {
                         sum += i * 10;
                     }
                 }

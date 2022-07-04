@@ -22,7 +22,7 @@ namespace adventofcode_2015.Tests.Task30
                 {"goldfish", 5 },
                 {"trees", 3 },
                 {"cars", 2 },
-                {"perfumes", 1 } 
+                {"perfumes", 1 }
             };
             Assert.Equal(405, Solution.Function(userData, data));
         }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace adventofcode_2015.Task19
 {
@@ -25,7 +22,7 @@ namespace adventofcode_2015.Task19
                     {
                         tempC++;
                     }
-                    else 
+                    else
                     {
                         newWord.Append($"{tempC}{tempN}");
                         tempC = 1;

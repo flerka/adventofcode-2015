@@ -47,9 +47,9 @@ namespace adventofcode_2015.Task22
             }
 
             var data = input.ToCharArray();
-            foreach(var rem in remove)
+            foreach (var rem in remove)
             {
-                for(int i= rem.start; i<= rem.end; i++)
+                for (int i = rem.start; i <= rem.end; i++)
                 {
                     data[i] = 'a';
                 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace adventofcode_2015.Task17
@@ -14,7 +13,7 @@ namespace adventofcode_2015.Task17
             var results = new List<double>();
             var cities = input.Select(i => i.start).Concat(input.Select(i => i.end)).Distinct().ToHashSet();
 
-            foreach(var route in input)
+            foreach (var route in input)
             {
                 var path = new HashSet<string>() { route.start, route.end };
                 results.Add(route.distance + Solve(cities, path, route.end, input));
@@ -22,21 +21,21 @@ namespace adventofcode_2015.Task17
 
             foreach (var route in input)
             {
-                var path = new HashSet<string>() {route.end, route.start };
+                var path = new HashSet<string>() { route.end, route.start };
                 results.Add(route.distance + Solve(cities, path, route.start, input));
             }
 
             return results.Min();
         }
 
-        private static double Solve(HashSet<string> cities, HashSet<string> path, string last, List<(string start, string end, double distance)>  input)
+        private static double Solve(HashSet<string> cities, HashSet<string> path, string last, List<(string start, string end, double distance)> input)
         {
-            var destinations = input.Where(i => 
+            var destinations = input.Where(i =>
                 (i.start == last && !path.Contains(i.end))
                 || (i.end == last && !path.Contains(i.start))).ToList();
             var results = new List<double>();
 
-            foreach(var dest in destinations)
+            foreach (var dest in destinations)
             {
                 var newPath = new HashSet<string>(path);
                 var d = dest.start == last ? dest.end : dest.start;

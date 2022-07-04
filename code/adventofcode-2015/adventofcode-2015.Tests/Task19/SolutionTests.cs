@@ -1,7 +1,4 @@
 ﻿using adventofcode_2015.Task19;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace adventofcode_2015.Tests.Task19

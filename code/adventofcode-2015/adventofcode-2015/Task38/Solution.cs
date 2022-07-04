@@ -11,7 +11,7 @@ namespace adventofcode_2015.Task38
         {
             var n = presentsNumber / 10;
             Dictionary<int, int> elfes = new();
-            for(var j = 1; j < n; j++)
+            for (var j = 1; j < n; j++)
             {
                 elfes[j] = 0;
                 var sum = 0;

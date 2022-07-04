@@ -55,12 +55,12 @@ namespace adventofcode_2015.Task14
     public class NotCommand : Command
     {
         public NotCommand(string left, string output) : base(OperationType.NOT, left, null, output)
-        { 
+        {
         }
 
         public override int PerformCommand(int? left, int? right)
         {
-            return  ~ left.Value;
+            return ~left.Value;
         }
     }
 
