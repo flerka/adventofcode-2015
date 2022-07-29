@@ -1,7 +1,5 @@
 ﻿using adventofcode_2015.Task44;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace adventofcode_2015.Tests.Task44
@@ -11,37 +9,56 @@ namespace adventofcode_2015.Tests.Task44
         [Fact]
         public void Task44_RealExample_Correct()
         {
-            Assert.Equal(134UL, Solution.Function(ReadFileAsync(Path.Combine("Task44", "Data.txt"))));
-        }
+            var spells = new List<Spell>
+{               new Spell
+                {
+                    Name = "Magic Missile",
+                    ManaCost = 53,
+                    Damage = 4
+                },
+                new Spell
+                {
+                    Name = "Drain",
+                    ManaCost = 73,
+                    Damage = 2,
+                    Heal = 2
+                },
+                new Spell
+                {
+                    Name = "Shield",
+                    ManaCost = 113,
+                    EffectLasting = 6,
+                    Armor = 7
+                },
+                new Spell
+                {
+                    Name = "Poison",
+                    ManaCost = 173,
+                    EffectLasting = 6,
+                    Damage = 3
+                },
+                new Spell
+                {
+                    Name = "Recharge",
+                    ManaCost = 229,
+                    EffectLasting = 5,
+                    Mana = 101
+                }
+            };
 
-        private List<Command> ReadFileAsync(string fileName)
-        {
-            var lines = File.ReadAllLines(fileName);
-            return lines.Select(line =>
+            var enemyStats = new BossStats
             {
-                var commandName = string.Concat(line.Take(3));
-                char? register = null;
-                int? offset = null;
+                Damage = 8,
+                HitPoints = 13
+            };
 
-                var commandText = string.Concat(line.Skip(4));
-                if (commandName == "jie" || commandName == "jio")
-                {
-                    var temp = commandText.Split(", ");
-                    offset = int.Parse(temp[1]);
-                    register = temp[0][0];
-                }
+            var playerStats = new PlayerStats
+            {
+                HitPoints = 20,
+                Mana = 250
+            };
 
-                if (commandName == "jmp")
-                {
-                    offset = int.Parse(commandText);
-                }
-
-                if (commandName == "hlf" || commandName == "tpl" || commandName == "inc")
-                {
-                    register = commandText[0];
-                }
-                 return  new Command { Name = commandName, Offset = offset, Register = register};
-            }).ToList();
+            Assert.Equal(226, Solution.Function(spells, enemyStats, playerStats));
         }
     }
 }

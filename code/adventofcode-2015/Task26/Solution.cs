@@ -3,73 +3,43 @@ using System.Linq;
 
 namespace adventofcode_2015.Task26
 {
-    public record HorseStats(string Name, int Speed, int RunDur, int RestDur);
-    public class HorseState
-    {
-        public int Run, RunDur, RestDur, Point = 0;
-        public bool IsResting = false;
-    }
-
     public class Solution
     {
         /// <summary>
-        /// Solution for the second https://adventofcode.com/2015/day/14/ task
+        /// Solution for the second https://adventofcode.com/2015/day/13/ task
         /// </summary>
-        public static int Function(List<HorseStats> input, int seconds)
+        public static int Function(List<(string name, string neigh, int sat)> input)
         {
-            var statsData = input.ToDictionary(i => i.Name, k => k);
-            var stateData = input.ToDictionary(i => i.Name, k => new HorseState());
-            for (var i = 0; i <= seconds; i++)
+            var names = input.GroupBy(i => i.name).Select(i => i.Key).ToList();
+            var pairs = input.ToDictionary(i => (i.name, i.neigh), k => k.sat);
+            var mutations = GetAllNamesPermutations(names, 5);
+
+            return mutations.Select(mut =>
             {
-                foreach (var horseName in stateData.Keys)
+                var mutationsList = mut.ToList();
+                var res = 0;
+                for (int i = 1; i < mutationsList.Count - 1; i++)
                 {
-                    var state = stateData[horseName];
-                    var stats = statsData[horseName];
-                    _ = state.IsResting switch
-                    {
-                        false => Run(state, stats),
-                        true => Rest(state, stats)
-                    };
+                    res += pairs[(mutationsList[i], mutationsList[i - 1])];
+                    res += pairs[(mutationsList[i], mutationsList[i + 1])];
                 }
+                res += pairs[(mutationsList[0], mutationsList[mutationsList.Count - 1])];
+                res += pairs[(mutationsList[0], mutationsList[1])];
 
-                UpdatePoints(stateData);
-            }
-
-            return stateData.Values.Max(i => i.Point);
+                res += pairs[(mutationsList[mutationsList.Count - 1], mutationsList[mutationsList.Count - 2])];
+                res += pairs[(mutationsList[mutationsList.Count - 1], mutationsList[0])];
+                return res;
+            }).Max();
         }
 
-        private static HorseState Run(HorseState state, HorseStats stats)
+        // based on this answer https://stackoverflow.com/a/10629938
+        static IEnumerable<IEnumerable<string>> GetAllNamesPermutations(IEnumerable<string> list, int length)
         {
-            state.RunDur++;
-            state.Run += stats.Speed;
-            if (state.RunDur == stats.RunDur)
-            {
-                state.IsResting = true;
-                state.RunDur = 0;
-            }
+            if (length == 1) return list.Select(t => new string[] { t });
 
-            return state;
-        }
-
-        private static HorseState Rest(HorseState state, HorseStats stats)
-        {
-            state.RestDur++;
-            if (state.RestDur == stats.RestDur)
-            {
-                state.IsResting = false;
-                state.RestDur = 0;
-            }
-
-            return state;
-        }
-
-        private static void UpdatePoints(Dictionary<string, HorseState> stateData)
-        {
-            var maxD = stateData.Values.Max(i => i.Run);
-            stateData.Values
-                .Where(i => i.Run == maxD)
-                .ToList()
-                .ForEach(i => i.Point++);
+            return GetAllNamesPermutations(list, length - 1)
+                .SelectMany(t => list.Where(o => !t.Contains(o)),
+                    (t1, t2) => t1.Concat(new string[] { t2 }));
         }
     }
 }

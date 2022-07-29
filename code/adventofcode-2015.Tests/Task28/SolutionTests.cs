@@ -1,5 +1,6 @@
 ﻿using adventofcode_2015.Task28;
 using System.Collections.Generic;
+using System.IO;
 using Xunit;
 
 namespace adventofcode_2015.Tests.Task28
@@ -9,11 +10,28 @@ namespace adventofcode_2015.Tests.Task28
         [Fact]
         public void Task28_RealExample_Correct()
         {
-            Assert.Equal(0, Solution.Function(new List<List<int>>{
-                new List<int> { 3, 0, 0, -3, 2},
-                new List<int> { -3, 3, 0, 0, 9},
-                new List<int> { -1, 0, 4, 0, 1},
-                new List<int> { 0, 0, -2, 2, 8} }));
+            var data = ReadFile(Path.Combine("Task28", "Data.txt"));
+            Assert.Equal(689, Solution.Function(data, 1000));
+        }
+
+        private List<HorseStats> ReadFile(string fileName)
+        {
+            var lines = File.ReadAllLines(fileName);
+
+            var result = new List<HorseStats>();
+
+            foreach (var line in lines)
+            {
+                var words = line.TrimEnd('.').Split(" ");
+                var name = words[0];
+                var speed = int.Parse(words[3]);
+                var runDur = int.Parse(words[6]);
+                var restDur = int.Parse(words[words.Length - 2]);
+
+                result.Add(new HorseStats(name, speed, runDur, restDur));
+            }
+
+            return result;
         }
     }
 }

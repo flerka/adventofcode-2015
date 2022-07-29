@@ -1,50 +1,55 @@
 ﻿using adventofcode_2015.Task29;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace adventofcode_2015.Tests.Task29
 {
     public class SolutionTests
     {
+        public SolutionTests(ITestOutputHelper output)
+        {
+            var converter = new Converter(output);
+            Console.SetOut(converter);
+        }
+
         [Fact]
         public void Task29_RealExample_Correct()
         {
-            var data = ReadFile(Path.Combine("Task29", "Data.txt"));
-            var userData = new Dictionary<string, int>
-            {
-                { "children", 3 },
-                {"cats", 7 },
-                {"samoyeds", 2 },
-                {"pomeranians", 3 },
-                {"akitas", 0 },
-                {"vizslas", 0 },
-                {"goldfish", 5 },
-                {"trees", 3 },
-                {"cars", 2 },
-                {"perfumes", 1 }
-            };
-            Assert.Equal(103, Solution.Function(userData, data));
+            Assert.Equal(0, Solution.Function(new List<List<int>>{
+                new List<int> { -1, -2, 6, 3},
+                new List<int> { 2, 3, -2, -1},
+                new List<int> { -1, 0, 4, 0},
+                new List<int> { 0, 0, -2, 2} }));
         }
 
-        private Dictionary<int, Dictionary<string, int>> ReadFile(string fileName)
+        private class Converter : TextWriter
         {
-            var lines = File.ReadAllLines(fileName);
-
-            var result = new Dictionary<int, Dictionary<string, int>>();
-            for (var i = 0; i < lines.Length; i++)
+            ITestOutputHelper _output;
+            public Converter(ITestOutputHelper output)
             {
-                result[i + 1] = new();
-                var line = lines[i];
-                var data = line.Split($"Sue {i + 1}: ")[1].Split(", ");
-                foreach (var item in data)
-                {
-                    var temp = item.Split(": ");
-                    result[i + 1][temp[0]] = int.Parse(temp[1]);
-                }
+                _output = output;
+            }
+            public override Encoding Encoding
+            {
+                get { return Encoding.Default; }
+            }
+            public override void WriteLine(string message)
+            {
+                _output.WriteLine(message);
+            }
+            public override void WriteLine(string format, params object[] args)
+            {
+                _output.WriteLine(format, args);
             }
 
-            return result;
+            public override void Write(char value)
+            {
+                throw new NotSupportedException("This text writer only supports WriteLine(string) and WriteLine(string, params object[]).");
+            }
         }
     }
 }

@@ -11,15 +11,36 @@ namespace adventofcode_2015.Tests.Task46
         [Fact]
         public void Task46_RealExample_Correct()
         {
-            Assert.Equal(24104369L, Solution.Function(ReadFileAsync(Path.Combine("Task46", "Data.txt"))));
+            Assert.Equal(134UL, Solution.Function(ReadFileAsync(Path.Combine("Task46", "Data.txt"))));
         }
 
-        private List<long> ReadFileAsync(string fileName)
+        private List<Command> ReadFileAsync(string fileName)
         {
             var lines = File.ReadAllLines(fileName);
             return lines.Select(line =>
             {
-                return long.Parse(line);
+                var commandName = string.Concat(line.Take(3));
+                char? register = null;
+                int? offset = null;
+
+                var commandText = string.Concat(line.Skip(4));
+                if (commandName == "jie" || commandName == "jio")
+                {
+                    var temp = commandText.Split(", ");
+                    offset = int.Parse(temp[1]);
+                    register = temp[0][0];
+                }
+
+                if (commandName == "jmp")
+                {
+                    offset = int.Parse(commandText);
+                }
+
+                if (commandName == "hlf" || commandName == "tpl" || commandName == "inc")
+                {
+                    register = commandText[0];
+                }
+                 return  new Command { Name = commandName, Offset = offset, Register = register};
             }).ToList();
         }
     }

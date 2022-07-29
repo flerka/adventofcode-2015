@@ -4,70 +4,220 @@ using System.Linq;
 
 namespace adventofcode_2015.Task44
 {
-    public class Command
+    public enum TurnResult
+    {
+        BossWon = 1,
+        PlayerWon = 2,
+        ContinueFight = 3
+    }
+
+    public class BossStats
+    {
+        public int HitPoints { get; set; }
+        public int Damage { get; set; }
+
+        public BossStats CreateCopy()
+        {
+            return new BossStats { Damage = Damage, HitPoints = HitPoints };
+        }
+    }
+
+    public class PlayerStats
+    {
+        public int HitPoints { get; set; }
+        public int Mana { get; set; }
+        public int SpentMana { get; set; }
+        public int Armor { get; set; }
+        public List<Spell> AppliedSpells { get; set; } = new();
+
+        public PlayerStats CreateCopy()
+        {
+            return new PlayerStats
+            {
+                HitPoints = HitPoints,
+                Mana = Mana,
+                SpentMana = SpentMana,
+                Armor = Armor,
+                AppliedSpells = AppliedSpells.Select(item => item.CreateCopy()).ToList()
+            };
+        }
+    }
+
+    public class Spell
     {
         public string Name { get; set; }
-        public char? Register { get; set; } = null;
-        public int? Offset { get; set; } = null;
+
+        public int ManaCost { get; set; }
+
+        public int EffectLasting { get; set; }
+
+        public int Damage { get; set; }
+
+        public int Armor { get; set; }
+
+        public int Mana { get; set; }
+
+        public int Heal { get; set; }
+
+        public Spell CreateCopy()
+        {
+            return new Spell
+            {
+                Name = Name,
+                ManaCost = ManaCost,
+                EffectLasting = EffectLasting,
+                Armor = Armor,
+                Mana = Mana,
+                Damage = Damage,
+                Heal = Heal
+            };
+        }
     }
 
     public class Solution
     {
         /// <summary>
-        /// Solution for the second https://adventofcode.com/2015/day/23/ task
+        /// Solution for the second https://adventofcode.com/2015/day/22/ task
         /// </summary>
-        public static ulong Function(List<Command> commands)
+        public static int Function(List<Spell> spells, BossStats boss, PlayerStats player)
         {
-            var values = new Dictionary<char, ulong>();
-            values['a'] = 1;
-            values['b'] = 0;
+            return (int) spells
+                .Select(spell =>
+                    Simulate(spell.CreateCopy(), spells, boss.CreateCopy(), player.CreateCopy()))
+                .ToList()
+                .Min();
+        }
 
-            var theEnd = false;
-            var position = 0;
+        public static double Simulate(Spell spell, List<Spell> spells, BossStats enemy, PlayerStats player)
+        {
+            var turnResult = TurnResult.ContinueFight;
 
-            while (position >= 0 && position < commands.Count)
+            turnResult = PlayerTurn(spell, enemy, player);
+            if (turnResult == TurnResult.ContinueFight)
             {
-                var command = commands[position];
-                if (command.Name == "hlf")
-                {
-                    values[command.Register.Value] /= 2;
-                }
-
-                if (command.Name == "tpl")
-                {
-                    values[command.Register.Value] *= 3;
-                }
-
-                if (command.Name == "inc")
-                {
-                    values[command.Register.Value]++;
-                }
-
-                if (command.Name == "jmp")
-                {
-                    position += command.Offset.Value;
-                    continue;
-                }
-
-                if (command.Name == "jie" && values[command.Register.Value] % 2 == 0)
-                {
-                    position += command.Offset.Value;
-                    continue;
-                }
-
-                if (command.Name == "jio" && values[command.Register.Value] == 1)
-                {
-                    position += command.Offset.Value;
-                    continue;
-                }
-                if (values[command.Register.Value] < 0)
-                {
-                    var a = 0;
-                } 
-
-                position++;
+                turnResult = BossTurn(enemy, player);
             }
-            return values['b'];
+
+            var allowedSpells = spells
+                    .Where(item => player.AppliedSpells
+                            .Count(item2 => item2.Name == item.Name && item2.EffectLasting > 1) == 0
+                            && item.ManaCost <= player.Mana)
+                    .ToList();
+
+            return turnResult switch
+            {
+                TurnResult.PlayerWon => player.SpentMana,
+                TurnResult.BossWon => double.PositiveInfinity,
+                TurnResult.ContinueFight =>
+                    allowedSpells.Count == 0
+                    ? double.PositiveInfinity
+                    : allowedSpells.Select(spell =>
+                        Simulate(spell.CreateCopy(), spells, enemy.CreateCopy(), player.CreateCopy()))
+                    .ToList()
+                    .Min(),
+                _ => throw new NotImplementedException()
+            };
+
+        }
+
+        private static TurnResult PlayerTurn(Spell spell, BossStats enemy, PlayerStats player)
+        {
+            player.HitPoints--;
+            if (player.HitPoints <= 0)
+            {
+                return TurnResult.BossWon;
+            }
+
+            ApplyEffects(enemy, player);
+            if (enemy.HitPoints <= 0)
+            {
+                return TurnResult.PlayerWon;
+            }
+
+            ExecuteSpell(spell, enemy, player);
+
+            player.AppliedSpells = player.AppliedSpells.Where(item => item.EffectLasting > 0).ToList();
+            player.Armor = 0;
+
+            if (enemy.HitPoints <= 0)
+            {
+                return TurnResult.PlayerWon;
+            }
+
+            return TurnResult.ContinueFight;
+        }
+
+        private static void ExecuteSpell(Spell spell, BossStats enemy, PlayerStats player)
+        {
+            if (spell.ManaCost > player.Mana)
+            {
+                throw new Exception("inconsistant player state");
+            }
+
+            player.Mana -= spell.ManaCost;
+            player.SpentMana += spell.ManaCost;
+            if (spell.EffectLasting > 0)
+            {
+                player.AppliedSpells.Add(
+                    new Spell
+                    {
+                        Armor = spell.Armor,
+                        Damage = spell.Damage,
+                        EffectLasting = spell.EffectLasting,
+                        Heal = spell.Heal,
+                        Mana = spell.Mana,
+                        ManaCost = spell.ManaCost,
+                        Name = spell.Name
+                    });
+            }
+            else
+            {
+                enemy.HitPoints -= spell.Damage;
+                player.HitPoints += spell.Heal;
+            }
+        }
+
+        private static void ApplyEffects(BossStats enemy, PlayerStats player)
+        {
+            foreach (var effect in player.AppliedSpells)
+            {
+                effect.EffectLasting--;
+                if (effect.Armor > 0)
+                {
+                    player.Armor = effect.Armor;
+                }
+
+                if (effect.Damage > 0)
+                {
+                    enemy.HitPoints -= effect.Damage;
+                }
+
+                if (effect.Mana > 0)
+                {
+                    player.Mana += effect.Mana;
+                }
+            }
+
+        }
+
+        private static TurnResult BossTurn(BossStats boss, PlayerStats player)
+        {
+            ApplyEffects(boss, player);
+            if (boss.HitPoints <= 0)
+            {
+                return TurnResult.PlayerWon;
+            }
+
+            player.HitPoints -= Math.Max(boss.Damage - player.Armor, 1);
+            if (player.HitPoints <= 0)
+            {
+                return TurnResult.BossWon;
+            }
+
+            player.AppliedSpells = player.AppliedSpells.Where(item => item.EffectLasting > 0).ToList();
+            player.Armor = 0;
+
+            return TurnResult.ContinueFight;
         }
     }
 }

@@ -4,58 +4,66 @@ using System.Linq;
 
 namespace adventofcode_2015.Task45
 {
+    public class Command
+    {
+        public string Name { get; set; }
+        public char? Register { get; set; } = null;
+        public int? Offset { get; set; } = null;
+    }
+
     public class Solution
     {
         /// <summary>
-        /// Solution for the first https://adventofcode.com/2015/day/24/ task
+        /// Solution for the first https://adventofcode.com/2015/day/23/ task
         /// </summary>
-        public static long Function(List<long> weights)
+        public static int Function(List<Command> commands)
         {
-            var totalWeight = weights.Sum();
-            var gWeight = totalWeight / 3;
-            var lenght = 1;
-            var allSums = new Dictionary<long, List<List<long>>>();
+            var values = new Dictionary<char, int>();
+            values['a'] = 0;
+            values['b'] = 0;
 
-            while (!allSums.ContainsKey(gWeight))
-            {
-                var combs = Subsets(weights, lenght).Where(i => i.Count == lenght).ToList();
-                foreach (var combination in combs)
-                {
-                    if (!allSums.ContainsKey(combination.Sum()))
-                    {
-                        allSums[combination.Sum()] = new();
-                    }
-                    allSums[combination.Sum()].Add(combination);
-                }
-                lenght++;
-            }
-            return allSums[gWeight].Select(item => item.Aggregate(1L, (current, item) => current * item)).Min();
-        }
+            var theEnd = false;
+            var position = 0;
 
-        // Code is from https://stackoverflow.com/a/36329628/3653606 this answer
-        static IEnumerable<List<T>> Subsets<T>(List<T> objects, int maxLength)
-        {
-            if (objects == null || maxLength <= 0)
-                yield break;
-            var stack = new Stack<int>(maxLength);
-            int i = 0;
-            while (stack.Count > 0 || i < objects.Count)
+            while (position >= 0 && position < commands.Count)
             {
-                if (i < objects.Count)
+                var command = commands[position];
+                if (command.Name == "hlf")
                 {
-                    if (stack.Count == maxLength)
-                        i = stack.Pop() + 1;
-                    stack.Push(i++);
-                    yield return (from index in stack.Reverse()
-                                  select objects[index]).ToList();
+                    values[command.Register.Value] /= 2;
                 }
-                else
+
+                if (command.Name == "tpl")
                 {
-                    i = stack.Pop() + 1;
-                    if (stack.Count > 0)
-                        i = stack.Pop() + 1;
+                    values[command.Register.Value] *= 3;
                 }
+
+                if (command.Name == "inc")
+                {
+                    values[command.Register.Value]++;
+                }
+
+                if (command.Name == "jmp")
+                {
+                    position += command.Offset.Value;
+                    continue;
+                }
+
+                if (command.Name == "jie" && values[command.Register.Value] % 2 == 0)
+                {
+                    position += command.Offset.Value;
+                    continue;
+                }
+
+                if (command.Name == "jio" && values[command.Register.Value] == 1)
+                {
+                    position += command.Offset.Value;
+                    continue;
+                }
+
+                position++;
             }
+            return values['b'];
         }
     }
 }

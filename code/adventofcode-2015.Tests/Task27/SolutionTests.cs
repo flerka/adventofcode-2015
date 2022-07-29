@@ -1,55 +1,37 @@
 ﻿using adventofcode_2015.Task27;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace adventofcode_2015.Tests.Task27
 {
     public class SolutionTests
     {
-        public SolutionTests(ITestOutputHelper output)
-        {
-            var converter = new Converter(output);
-            Console.SetOut(converter);
-        }
-
         [Fact]
         public void Task27_RealExample_Correct()
         {
-            Assert.Equal(0, Solution.Function(new List<List<int>>{
-                new List<int> { -1, -2, 6, 3},
-                new List<int> { 2, 3, -2, -1},
-                new List<int> { -1, 0, 4, 0},
-                new List<int> { 0, 0, -2, 2} }));
+            var data = ReadFile(Path.Combine("Task27", "Data.txt"));
+            Assert.Equal(1120, Solution.Function(data, 1000));
         }
 
-        private class Converter : TextWriter
+        private List<HorseStats> ReadFile(string fileName)
         {
-            ITestOutputHelper _output;
-            public Converter(ITestOutputHelper output)
+            var lines = File.ReadAllLines(fileName);
+
+            var result = new List<HorseStats>();
+
+            foreach (var line in lines)
             {
-                _output = output;
-            }
-            public override Encoding Encoding
-            {
-                get { return Encoding.Default; }
-            }
-            public override void WriteLine(string message)
-            {
-                _output.WriteLine(message);
-            }
-            public override void WriteLine(string format, params object[] args)
-            {
-                _output.WriteLine(format, args);
+                var words = line.TrimEnd('.').Split(" ");
+                var name = words[0];
+                var speed = int.Parse(words[3]);
+                var runDur = int.Parse(words[6]);
+                var restDur = int.Parse(words[words.Length - 2]);
+
+                result.Add(new HorseStats(name, speed, runDur, restDur));
             }
 
-            public override void Write(char value)
-            {
-                throw new NotSupportedException("This text writer only supports WriteLine(string) and WriteLine(string, params object[]).");
-            }
+            return result;
         }
     }
 }

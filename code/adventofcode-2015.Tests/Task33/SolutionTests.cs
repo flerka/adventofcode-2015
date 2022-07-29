@@ -12,20 +12,16 @@ namespace adventofcode_2015.Tests.Task33
         public void Task33_RealExample_Correct()
         {
             var data = ReadFile(Path.Combine("Task33", "Data.txt"));
-            var stepsCount = 100;
-            Assert.Equal(4, Solution.Function(data, stepsCount));
+            var storageSize = 25;
+            Assert.Equal(4, Solution.Function(data, storageSize));
         }
 
-        private List<List<bool>> ReadFile(string fileName)
+        private List<int> ReadFile(string fileName)
         {
-            var result = new List<List<bool>>();
-            var lines = File.ReadAllLines(fileName);
-            foreach (var line in lines)
-            {
-                result.Add(line.ToCharArray().Select(i => i == '#').ToList());
-            }
-
-            return result;
+            return File.ReadAllText(fileName)
+                .Split(" ")
+                .Select(int.Parse)
+                .ToList();
         }
     }
 }

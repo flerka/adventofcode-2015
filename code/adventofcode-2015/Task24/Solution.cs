@@ -1,45 +1,69 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace adventofcode_2015.Task24
 {
     public class Solution
     {
         /// <summary>
-        /// Solution for the second https://adventofcode.com/2015/day/13/ task
+        /// Solution for the second https://adventofcode.com/2015/day/12/ task
         /// </summary>
-        public static int Function(List<(string name, string neigh, int sat)> input)
+        public static int Function(string input)
         {
-            var names = input.GroupBy(i => i.name).Select(i => i.Key).ToList();
-            var pairs = input.ToDictionary(i => (i.name, i.neigh), k => k.sat);
-            var mutations = GetAllNamesPermutations(names, 5);
+            var objectDepth = 0;
+            var remove = new List<(int start, int end)>();
+            var stack = new Stack<int>();
 
-            return mutations.Select(mut =>
+            for (var i = 0; i < input.Length; i++)
             {
-                var mutationsList = mut.ToList();
-                var res = 0;
-                for (int i = 1; i < mutationsList.Count - 1; i++)
+                var ch = input[i];
+                if (ch == '{')
                 {
-                    res += pairs[(mutationsList[i], mutationsList[i - 1])];
-                    res += pairs[(mutationsList[i], mutationsList[i + 1])];
+                    stack.Push(i);
+                    if (objectDepth > 0)
+                    {
+                        objectDepth++;
+                    }
                 }
-                res += pairs[(mutationsList[0], mutationsList[mutationsList.Count - 1])];
-                res += pairs[(mutationsList[0], mutationsList[1])];
 
-                res += pairs[(mutationsList[mutationsList.Count - 1], mutationsList[mutationsList.Count - 2])];
-                res += pairs[(mutationsList[mutationsList.Count - 1], mutationsList[0])];
-                return res;
-            }).Max();
-        }
+                if (ch == '}')
+                {
+                    var depth = stack.Pop();
+                    if (objectDepth > 0)
+                    {
+                        objectDepth--;
+                        if (objectDepth == 0)
+                        {
+                            remove.Add((depth, i));
+                        }
+                    }
+                }
 
-        // based on this answer https://stackoverflow.com/a/10629938
-        static IEnumerable<IEnumerable<string>> GetAllNamesPermutations(IEnumerable<string> list, int length)
-        {
-            if (length == 1) return list.Select(t => new string[] { t });
+                if (ch == 'r' && IsRed(i) && objectDepth == 0)
+                {
+                    objectDepth++;
+                }
+            }
 
-            return GetAllNamesPermutations(list, length - 1)
-                .SelectMany(t => list.Where(o => !t.Contains(o)),
-                    (t1, t2) => t1.Concat(new string[] { t2 }));
+            var data = input.ToCharArray();
+            foreach (var rem in remove)
+            {
+                for (int i = rem.start; i <= rem.end; i++)
+                {
+                    data[i] = 'a';
+                }
+            }
+
+            var result = string.Join(string.Empty, data);
+            return Regex.Matches(result, @"-?\d+")
+                   .Select(i => int.Parse(i.Value))
+                    .Sum();
+
+            bool IsRed(int i) =>
+                input[i + 1] == 'e' &&
+                input[i + 2] == 'd' &&
+                input[i - 2] == ':';
         }
     }
 }

@@ -5,7 +5,7 @@ namespace adventofcode_2015.Task19
     public class Solution
     {
         /// <summary>
-        /// Solution for the first and the https://adventofcode.com/2015/day/10/ task
+        /// Solution for the first and the second https://adventofcode.com/2015/day/10/ task
         /// </summary>
         public static string Function(string input, int repeat)
         {

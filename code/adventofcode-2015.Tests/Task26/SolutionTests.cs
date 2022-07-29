@@ -1,6 +1,7 @@
 ﻿using adventofcode_2015.Task26;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace adventofcode_2015.Tests.Task26
@@ -10,25 +11,33 @@ namespace adventofcode_2015.Tests.Task26
         [Fact]
         public void Task26_RealExample_Correct()
         {
-            var data = ReadFile(Path.Combine("Task26", "Data.txt"));
-            Assert.Equal(689, Solution.Function(data, 1000));
+            Assert.Equal(286, Solution.Function(ReadFile(Path.Combine("Task26", "Data.txt"))));
         }
 
-        private List<HorseStats> ReadFile(string fileName)
+        private List<(string, string, int)> ReadFile(string fileName)
         {
+            var size = 3;
             var lines = File.ReadAllLines(fileName);
+            var skip = 0;
 
-            var result = new List<HorseStats>();
-
-            foreach (var line in lines)
+            var result = new List<(string, string, int)>();
+            while (skip < lines.Length)
             {
-                var words = line.TrimEnd('.').Split(" ");
-                var name = words[0];
-                var speed = int.Parse(words[3]);
-                var runDur = int.Parse(words[6]);
-                var restDur = int.Parse(words[words.Length - 2]);
+                var namedLines = lines.Skip(skip).Take(size).ToList();
+                foreach (var line in namedLines)
+                {
+                    var words = line.TrimEnd('.').Split(" ");
+                    var name = words[0];
+                    var neighbor = words.Last();
 
-                result.Add(new HorseStats(name, speed, runDur, restDur));
+                    var number = int.Parse(words[3]);
+                    number *= words[2] == "gain" ? 1 : -1;
+
+                    result.Add((name, neighbor, number));
+                }
+                result.Add((result.Last().Item1, "Me", 0));
+                result.Add(("Me", result.Last().Item1, 0));
+                skip += size;
             }
 
             return result;

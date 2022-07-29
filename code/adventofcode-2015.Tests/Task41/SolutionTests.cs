@@ -9,56 +9,43 @@ namespace adventofcode_2015.Tests.Task41
         [Fact]
         public void Task41_RealExample_Correct()
         {
-            var spells = new List<Spell>
-{               new Spell
+            var shop = new Shop
+            {
+                WeaponItems = new List<ItemStats>
                 {
-                    Name = "Magic Missile",
-                    ManaCost = 53,
-                    Damage = 4
+                    new ItemStats("Dagger", 8, 4, 0),
+                    new ItemStats("Shortsword", 10, 5, 0),
+                    new ItemStats("Warhammer", 25, 6, 0),
+                    new ItemStats("Longsword", 40, 7, 0),
+                    new ItemStats("Greataxe", 74, 8, 0)
                 },
-                new Spell
-                {
-                    Name = "Drain",
-                    ManaCost = 73,
-                    Damage = 2,
-                    Heal = 2
+                ArmorItems = new List<ItemStats> {
+                    new ItemStats("Leather", 13, 0, 1),
+                    new ItemStats("Chainmail", 31, 0, 2),
+                    new ItemStats("Splintmail", 53, 0, 3),
+                    new ItemStats("Bandedmail", 75, 0, 4),
+                    new ItemStats("Platemail", 102, 0, 5)
                 },
-                new Spell
+                RingItems = new List<ItemStats>
                 {
-                    Name = "Shield",
-                    ManaCost = 113,
-                    EffectLasting = 6,
-                    Armor = 7
-                },
-                new Spell
-                {
-                    Name = "Poison",
-                    ManaCost = 173,
-                    EffectLasting = 6,
-                    Damage = 3
-                },
-                new Spell
-                {
-                    Name = "Recharge",
-                    ManaCost = 229,
-                    EffectLasting = 5,
-                    Mana = 101
+                    new ItemStats("Damage +1", 25, 1, 0),
+                    new ItemStats("Damage +2",50, 2, 0),
+                    new ItemStats("Damage +3", 100, 3, 0),
+                    new ItemStats("Defense +1", 20, 0, 1),
+                    new ItemStats("Defense +2", 40, 0, 2),
+                    new ItemStats("Defense +3", 80, 0, 3)
                 }
             };
 
-            var enemyStats = new BossStats
+            var enemyStats = new UserStats
             {
                 Damage = 8,
-                HitPoints = 13
+                Armor = 1,
+                HitPoints = 50
             };
 
-            var playerStats = new PlayerStats
-            {
-                HitPoints = 10,
-                Mana = 250
-            };
-
-            Assert.Equal(226, Solution.Function(spells, enemyStats, playerStats));
+            var myHitPoints = 100;
+            Assert.Equal(10, Solution.Function(shop, enemyStats, myHitPoints));
         }
     }
 }

@@ -11,22 +11,17 @@ namespace adventofcode_2015.Tests.Task34
         [Fact]
         public void Task34_RealExample_Correct()
         {
-            // To make my solution work I manually changed corner values in input data to true.
             var data = ReadFile(Path.Combine("Task34", "Data.txt"));
-            var stepsCount = 100;
-            Assert.Equal(7, Solution.Function(data, stepsCount));
+            var storageSize = 25;
+            Assert.Equal(3, Solution.Function(data, storageSize));
         }
 
-        private List<List<bool>> ReadFile(string fileName)
+        private List<int> ReadFile(string fileName)
         {
-            var result = new List<List<bool>>();
-            var lines = File.ReadAllLines(fileName);
-            foreach (var line in lines)
-            {
-                result.Add(line.ToCharArray().Select(i => i == '#').ToList());
-            }
-
-            return result;
+            return File.ReadAllText(fileName)
+                .Split(" ")
+                .Select(int.Parse)
+                .ToList();
         }
     }
 }
