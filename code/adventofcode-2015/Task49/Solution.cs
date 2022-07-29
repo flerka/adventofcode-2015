@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Numerics;
 
 namespace adventofcode_2015.Task49
 {
@@ -9,53 +7,14 @@ namespace adventofcode_2015.Task49
         /// <summary>
         /// Solution for the first https://adventofcode.com/2015/day/25/ task
         /// </summary>
-        public static long Function(List<long> weights)
+        public static long Function(int row, int column)
         {
-            var totalWeight = weights.Sum();
-            var gWeight = totalWeight / 3;
-            var lenght = 1;
-            var allSums = new Dictionary<long, List<List<long>>>();
-
-            while (!allSums.ContainsKey(gWeight))
-            {
-                var combs = Subsets(weights, lenght).Where(i => i.Count == lenght).ToList();
-                foreach (var combination in combs)
-                {
-                    if (!allSums.ContainsKey(combination.Sum()))
-                    {
-                        allSums[combination.Sum()] = new();
-                    }
-                    allSums[combination.Sum()].Add(combination);
-                }
-                lenght++;
-            }
-            return allSums[gWeight].Select(item => item.Aggregate(1L, (current, item) => current * item)).Min();
-        }
-
-        // Code is from https://stackoverflow.com/a/36329628/3653606 this answer
-        static IEnumerable<List<T>> Subsets<T>(List<T> objects, int maxLength)
-        {
-            if (objects == null || maxLength <= 0)
-                yield break;
-            var stack = new Stack<int>(maxLength);
-            int i = 0;
-            while (stack.Count > 0 || i < objects.Count)
-            {
-                if (i < objects.Count)
-                {
-                    if (stack.Count == maxLength)
-                        i = stack.Pop() + 1;
-                    stack.Push(i++);
-                    yield return (from index in stack.Reverse()
-                                  select objects[index]).ToList();
-                }
-                else
-                {
-                    i = stack.Pop() + 1;
-                    if (stack.Count > 0)
-                        i = stack.Pop() + 1;
-                }
-            }
+            var firstCode = 20151125L;
+            var baseVal = 252533;
+            var modVal = 33554393L;
+            
+            long exponent = (row + column - 2) * (row + column - 1) / 2 + column - 1;
+            return (long)(BigInteger.ModPow(baseVal, exponent, modVal) * firstCode) % modVal;
         }
     }
 }
