@@ -1,6 +1,6 @@
 ## Advent Of Code 2015 with C#
 
-__*Work is currently in progress. I solved 20/25 days.*__
+__*I solved 25/25 days.*__
 
 This repository contains my solutions for [Advent of code 2015 🎄](https://adventofcode.com/2015). All tasks are solved with **C#** and have unit tests to validate them. 
 

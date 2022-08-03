@@ -1,28 +1,27 @@
-﻿namespace adventofcode_2015.Task1
+﻿namespace adventofcode_2015.Task1;
+
+public class Solution
 {
-    public class Solution
+    /// <summary>
+    /// Solution for the first https://adventofcode.com/2015/day/1/ task
+    /// </summary>
+    public static int Function(string input)
     {
-        /// <summary>
-        /// Solution for the first https://adventofcode.com/2015/day/1/ task
-        /// </summary>
-        public static int Function(string input)
+        var result = 0;
+        var arr = input.ToCharArray();
+
+        foreach (var ch in arr)
         {
-            var result = 0;
-            var arr = input.ToCharArray();
-
-            foreach (var ch in arr)
+            if (ch == '(')
             {
-                if (ch == '(')
-                {
-                    result++;
-                }
-                else
-                {
-                    result--;
-                }
+                result++;
             }
-
-            return result;
+            else
+            {
+                result--;
+            }
         }
+
+        return result;
     }
 }

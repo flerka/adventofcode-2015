@@ -1,39 +1,38 @@
 ﻿using System.Text;
 
-namespace adventofcode_2015.Task19
+namespace adventofcode_2015.Task19;
+
+public class Solution
 {
-    public class Solution
+    /// <summary>
+    /// Solution for the first and the second https://adventofcode.com/2015/day/10/ task
+    /// </summary>
+    public static string Function(string input, int repeat)
     {
-        /// <summary>
-        /// Solution for the first and the second https://adventofcode.com/2015/day/10/ task
-        /// </summary>
-        public static string Function(string input, int repeat)
+        var word = input;
+        for (int i = 0; i < repeat; i++)
         {
-            var word = input;
-            for (int i = 0; i < repeat; i++)
+            var newWord = new StringBuilder(10000000);
+            char tempN = word[0];
+            int tempC = 1;
+
+            for (int k = 1; k < word.Length; k++)
             {
-                var newWord = new StringBuilder(10000000);
-                char tempN = word[0];
-                int tempC = 1;
-
-                for (int k = 1; k < word.Length; k++)
+                if (word[k] == tempN)
                 {
-                    if (word[k] == tempN)
-                    {
-                        tempC++;
-                    }
-                    else
-                    {
-                        newWord.Append($"{tempC}{tempN}");
-                        tempC = 1;
-                        tempN = word[k];
-                    }
+                    tempC++;
                 }
-                newWord.Append($"{tempC}{tempN}");
-                word = newWord.ToString();
+                else
+                {
+                    newWord.Append($"{tempC}{tempN}");
+                    tempC = 1;
+                    tempN = word[k];
+                }
             }
-
-            return word;
+            newWord.Append($"{tempC}{tempN}");
+            word = newWord.ToString();
         }
+
+        return word;
     }
 }
